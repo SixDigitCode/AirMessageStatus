@@ -10,7 +10,7 @@ airmessage_port = "1359" #(default = 1359)
 internet_test_addr = "1.1.1.1"
 
 def ping_remote(remote_ip):
-        response = os.system("ping -c 1 "+remote_ip+" > /dev/null")
+        response = os.system("ping -c 1 "+remote_ip+" > /dev/null 2>&1")
         return (response == 0)
 
 def ping_router():
@@ -23,7 +23,7 @@ def ping_internet_test():
         return ping_remote(internet_test_addr)
 
 def check_if_server_running():
-        res = os.system("pgrep AirMessage")
+        res = os.system("pgrep AirMessage > /dev/null")
         return res != 256
 
 def check_if_port_reachable():
@@ -59,7 +59,7 @@ def print_status(status_name, check_function):
                 print('\033[92m'+u"\u2713"+" "+status_name+' [OK] \033[0m')
         else:
                 print('\033[91m'+u"\u2715"+" "+status_name+' [FAILED] \033[0m')
-print("========= SERVER STATUS AND INFO =========\n")
+print("\n========= SERVER STATUS AND INFO =========\n")
 
 print("Public IP Address: "+requests.get('https://api.ipify.org').text)
 print("Forwarding Address: "+remote_address)
@@ -70,6 +70,3 @@ print_status("Router reachable?",ping_router)
 print_status("Internet reachable?",ping_internet_test)
 print_status("Port forwarding working?",check_if_port_reachable)
 print_status(remote_address+" reachable?",ping_remote_address)
-
-print("\nPress any key to exit...")
-input()
